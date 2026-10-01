@@ -1,2 +1,4 @@
-// Global and configurable keyboard shortcuts.
-export class KeyboardShortcuts {}
+export class KeyboardShortcuts{
+ constructor(handlers){this.handlers=handlers}
+ init(){document.addEventListener("keydown",e=>{if(e.target.matches("input,textarea,select,[contenteditable=true]"))return;const key=e.key.toLowerCase();if((e.ctrlKey||e.metaKey)&&key==="k"){e.preventDefault();this.handlers.command?.();return}const map={ " ":"play","arrowleft":"back","arrowright":"forward","arrowup":"volumeUp","arrowdown":"volumeDown","m":"mute","n":"next","p":"previous","f":"fullscreen","e":"equalizer"};const action=map[e.key.toLowerCase()]||map[key];if(action){e.preventDefault();this.handlers[action]?.(e)}})}
+}
