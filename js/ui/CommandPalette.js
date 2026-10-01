@@ -1,2 +1,5 @@
-// Command palette and command registry UI.
-export class CommandPalette {}
+export class CommandPalette{
+ constructor(open){this.open=open}
+ register(commands){this.commands=commands}
+ show(){this.open(this.commands||[])}
+}

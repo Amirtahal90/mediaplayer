@@ -1,2 +1,5 @@
-// Persistent mini-player UI.
-export class MiniPlayer {}
+export class MiniPlayer{
+ constructor(root,events={}){this.root=root;this.events=events}
+ show(){this.root.classList.remove("hidden")}
+ hide(){this.root.classList.add("hidden")}
+}
