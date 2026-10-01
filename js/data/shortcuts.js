@@ -1,1 +1,1 @@
-export const defaultShortcuts = Object.freeze({ playPause: "Space", next: "N", previous: "P", mute: "M", fullscreen: "F" });
+export const defaultShortcuts=Object.freeze({playPause:"Space",seekBackward:"ArrowLeft",seekForward:"ArrowRight",volumeUp:"ArrowUp",volumeDown:"ArrowDown",mute:"M",next:"N",previous:"P",fullscreen:"F",equalizer:"E"});

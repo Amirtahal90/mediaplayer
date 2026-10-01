@@ -1,1 +1,1 @@
-export const defaultSettings = Object.freeze({ theme: "dark", accent: "green", playbackRate: 1, volume: 1 });
+export const defaultSettings=Object.freeze({theme:"dark",accent:"#7dff6b",volume:1,playbackRate:1,shuffle:false,repeat:"off",visualizer:true,reducedMotion:false});

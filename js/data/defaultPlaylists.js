@@ -1,1 +1,1 @@
-export const defaultPlaylists = [];
+export const defaultPlaylists=Object.freeze([]);
