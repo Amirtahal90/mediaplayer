@@ -1,4 +1,4 @@
 export class FullscreenManager{
  constructor(target){this.target=target}
- async toggle(){if(!document.fullscreenElement)return this.target.requestFullscreen?.();return document.exitFullscreen?.()}
+ async toggle(){if(document.fullscreenElement)return document.exitFullscreen();return this.target.requestFullscreen?.()}
 }
