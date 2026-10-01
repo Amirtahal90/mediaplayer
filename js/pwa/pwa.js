@@ -1,1 +1,1 @@
-export async function registerPWA(){if(!("serviceWorker" in navigator))return null;try{return await navigator.serviceWorker.register("./js/pwa/service-worker.js")}catch(error){console.warn("AURA service worker registration failed",error);return null}}
+export async function registerPWA(){if(!("serviceWorker" in navigator))return null;try{return await navigator.serviceWorker.register("./js/pwa/service-worker.js")}catch(error){console.warn("AURA PWA registration failed",error);return null}}

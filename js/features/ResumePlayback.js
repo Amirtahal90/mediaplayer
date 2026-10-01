@@ -1,5 +1,5 @@
 export class ResumePlayback{
- constructor(store){this.store=store}
- async save(item,time){if(item)await this.store.put("history",{id:item.id,title:item.title,time,updatedAt:Date.now()})}
- async load(){return await this.store.get("history")||[]}
+ constructor(history){this.history=history}
+ get(item){const p=this.history.position(item?.id);return p>5?p:0}
+ async save(item,time){return this.history.touch(item,time)}
 }
