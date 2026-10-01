@@ -1,7 +1,10 @@
 export class IndexedDBStore{
- constructor(name="aura-db",version=1){this.name=name;this.version=version;this.db=null}
- async open(){if(this.db)return this.db;this.db=await new Promise((resolve,reject)=>{const r=indexedDB.open(this.name,this.version);r.onupgradeneeded=()=>{const db=r.result;for(const s of ["library","playlists","history","settings"])if(!db.objectStoreNames.contains(s))db.createObjectStore(s,{keyPath:"key"})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return this.db}
+ constructor(name="aura-db",version=2){this.name=name;this.version=version;this.db=null}
+ async open(){if(this.db)return this.db;this.db=await new Promise((resolve,reject)=>{const r=indexedDB.open(this.name,this.version);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains("media"))db.createObjectStore("media",{keyPath:"id"});for(const s of ["library","playlists","history","settings"])if(!db.objectStoreNames.contains(s))db.createObjectStore(s,{keyPath:"key"})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return this.db}
  async get(store,key="data"){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readonly").objectStore(store).get(key);r.onsuccess=()=>resolve(r.result?.value??null);r.onerror=()=>reject(r.error)})}
+ async getAll(store){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readonly").objectStore(store).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
  async put(store,value,key="data"){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).put({key,value});r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
+ async putItem(store,value){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).put(value);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
+ async deleteItem(store,key){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).delete(key);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
  async clear(store){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).clear();r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
 }

@@ -1,12 +1,11 @@
 export class LibraryManager{
  constructor(store){this.store=store;this.items=[];this.listeners=new Set()}
- async init(){const saved=await this.store.get("library")||[];this.items=saved.map(i=>({...i,url:i.file?URL.createObjectURL(i.file):i.url||null}));this.emit();return this.items}
- async addFiles(files){const added=[];for(const file of files){if(!file.type.startsWith("audio/")&&!file.type.startsWith("video/"))continue;const item={id:crypto.randomUUID(),name:file.name,title:file.name.replace(/\.[^.]+$/,""),artist:"Local file",type:file.type.startsWith("video/")?"video":"audio",mime:file.type,size:file.size,url:URL.createObjectURL(file),file,addedAt:Date.now(),duration:0,favorite:false};added.push(await this.readDuration(item))}this.items.push(...added);await this.persist();this.emit();return added}
+ async init(){let saved=await this.store.getAll("media");if(!saved.length){const legacy=await this.store.get("library")||[];if(legacy.length){saved=legacy;for(const item of legacy)await this.store.putItem("media",item);await this.store.clear("library").catch(()=>{})}}this.items=saved.map(i=>({...i,url:i.file?URL.createObjectURL(i.file):i.url||null}));this.emit();return this.items}
+ async addFiles(files){const added=[];for(const file of files){if(!file.type.startsWith("audio/")&&!file.type.startsWith("video/"))continue;const item={id:crypto.randomUUID(),name:file.name,title:file.name.replace(/\.[^.]+$/,""),artist:"Local file",type:file.type.startsWith("video/")?"video":"audio",mime:file.type,size:file.size,url:URL.createObjectURL(file),file,addedAt:Date.now(),duration:0,favorite:false};const ready=await this.readDuration(item);await this.store.putItem("media",ready);added.push(ready)}this.items.push(...added);this.emit();return added}
  readDuration(item){return new Promise(resolve=>{const el=document.createElement(item.type);el.preload="metadata";el.onloadedmetadata=()=>{item.duration=Number.isFinite(el.duration)?el.duration:0;el.remove();resolve(item)};el.onerror=()=>{el.remove();resolve(item)};el.src=item.url})}
- async toggleFavorite(id){const i=this.items.find(x=>x.id===id);if(!i)return;i.favorite=!i.favorite;await this.persist();this.emit()}
- async remove(id){const i=this.items.find(x=>x.id===id);if(i?.url)URL.revokeObjectURL(i.url);this.items=this.items.filter(x=>x.id!==id);await this.persist();this.emit()}
- async persist(){await this.store.put("library",this.items)}
+ async toggleFavorite(id){const i=this.items.find(x=>x.id===id);if(!i)return;i.favorite=!i.favorite;await this.store.putItem("media",i);this.emit()}
+ async remove(id){const i=this.items.find(x=>x.id===id);if(!i)return;if(i.url)URL.revokeObjectURL(i.url);await this.store.deleteItem("media",id);this.items=this.items.filter(x=>x.id!==id);this.emit()}
  on(fn){this.listeners.add(fn);fn(this.items);return()=>this.listeners.delete(fn)}
  emit(){this.listeners.forEach(fn=>fn(this.items))}
- search(q){const s=String(q||"").trim().toLowerCase();if(!s)return this.items;return this.items.filter(i=>[i.title,i.artist,i.name,i.type].some(v=>String(v).toLowerCase().includes(s)))}
+ search(q){const s=String(q||"").trim().toLowerCase();if(!s)return [...this.items];return this.items.filter(i=>[i.title,i.artist,i.name,i.type,i.mime].some(v=>String(v).toLowerCase().includes(s)))}
 }
