@@ -1,1 +1,1 @@
-export function detectMediaType(file) { return file?.type?.startsWith("video/") ? "video" : "audio"; }
+const audio=/^audio\//,video=/^video\//;export function detectMediaType(input){const type=input?.type||"";if(video.test(type)||video.test(String(input?.mime||"")))return"video";if(audio.test(type)||audio.test(String(input?.mime||"")))return"audio";const name=String(input?.name||input||"").toLowerCase();return /\.(mp4|mkv|webm|mov|avi|m4v|ogv)$/.test(name)?"video":/\.(mp3|wav|ogg|oga|m4a|aac|flac|opus)$/.test(name)?"audio":"unknown"}

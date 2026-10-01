@@ -1,1 +1,1 @@
-// Shared low-level utility helpers.
+export const clamp=(v,min,max)=>Math.min(max,Math.max(min,Number(v)));export const uid=()=>crypto.randomUUID();export const byId=id=>document.getElementById(id);export function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}

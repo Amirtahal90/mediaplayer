@@ -1,1 +1,1 @@
-export function formatTime(seconds) { return "0:00"; }
+export function formatTime(seconds,short=false){if(!Number.isFinite(Number(seconds))||Number(seconds)<0)return short?"0:00":"00:00";const s=Math.floor(Number(seconds)),sec=String(s%60).padStart(2,"0"),min=Math.floor(s/60);if(short)return min+":"+sec;const h=Math.floor(min/60),m=String(min%60).padStart(2,"0");return h?String(h).padStart(2,"0")+":"+m+":"+sec:m+":"+sec}

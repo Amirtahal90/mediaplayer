@@ -1,1 +1,1 @@
-export function formatSize(bytes) { return String(bytes ?? 0); }
+export function formatSize(bytes){let n=Number(bytes)||0;if(n<1024)return n+" B";const units=["KB","MB","GB","TB"];let i=-1;do{n/=1024;i++}while(n>=1024&&i<units.length-1);return n.toFixed(n>=100?0:n>=10?1:2)+" "+units[i]}
