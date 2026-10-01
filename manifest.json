@@ -1,10 +1,1 @@
-{
-  "name":"AURA Media Center",
-  "short_name":"AURA",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#08090b",
-  "theme_color":"#08090b",
-  "description":"Professional web media player foundation.",
-  "icons":[]
-}
+{"name":"AURA Media Center","short_name":"AURA","start_url":"./","display":"standalone","background_color":"#07090c","theme_color":"#07090c","description":"Powerful browser media player","icons":[{"src":"./assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
