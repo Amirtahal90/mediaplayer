@@ -1,0 +1,4 @@
+export class MediaSession{
+ constructor(state){this.state=state;this.handlers=null}
+ init(handlers={}){this.handlers=handlers;if(!("mediaSession" in navigator))return;for(const [action,fn] of Object.entries({play:handlers.play,pause:handlers.pause,nexttrack:handlers.next,previoustrack:handlers.previous,seekforward:()=>handlers.seek?.(10),seekbackward:()=>handlers.seek?.(-10)})){try{navigator.mediaSession.setActionHandler(action,fn||null)}catch{}}this.state.subscribe(s=>{const m=s.media;if(!m)return;navigator.mediaSession.metadata=new MediaMetadata({title:m.title||"AURA",artist:m.artist||"Local file"})})}
+}
