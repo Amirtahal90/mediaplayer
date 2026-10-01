@@ -1,2 +1,4 @@
-// Queue UI and interactions.
-export class QueueUI {}
+export class QueueUI{
+ constructor(root,empty,count,queue,events={}){this.root=root;this.empty=empty;this.count=count;this.queue=queue;this.events=events;queue.on(()=>this.render())}
+ render(){this.root.innerHTML="";this.count.textContent=this.queue.items.length;this.empty.classList.toggle("hidden",this.queue.items.length>0);this.queue.items.forEach((item,i)=>{const el=document.createElement("div");el.className="queue-item "+(i===this.queue.index?"active":"");const thumb=document.createElement("div");thumb.className="queue-thumb";thumb.textContent=item.type==="video"?"VID":"♫";const copy=document.createElement("div");copy.className="queue-copy";const title=document.createElement("div");title.className="queue-title";title.textContent=item.title;const meta=document.createElement("div");meta.className="queue-meta";meta.textContent=item.artist||"Local file";copy.append(title,meta);const remove=document.createElement("button");remove.className="queue-remove";remove.innerHTML='<i data-lucide="x"></i>';el.append(thumb,copy,remove);el.addEventListener("click",e=>{if(e.target.closest(".queue-remove"))return;this.events.select?.(i)});remove.addEventListener("click",e=>{e.stopPropagation();this.queue.remove(i)});this.root.append(el)});window.lucide?.createIcons?.()}
+}

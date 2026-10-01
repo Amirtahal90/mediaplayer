@@ -1,2 +1,7 @@
-// IndexedDB database and schema foundation.
-export class IndexedDBStore {}
+export class IndexedDBStore{
+ constructor(name="aura-db",version=1){this.name=name;this.version=version;this.db=null}
+ async open(){if(this.db)return this.db;this.db=await new Promise((resolve,reject)=>{const r=indexedDB.open(this.name,this.version);r.onupgradeneeded=()=>{const db=r.result;for(const s of ["library","playlists","history","settings"])if(!db.objectStoreNames.contains(s))db.createObjectStore(s,{keyPath:"key"})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return this.db}
+ async get(store,key="data"){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readonly").objectStore(store).get(key);r.onsuccess=()=>resolve(r.result?.value??null);r.onerror=()=>reject(r.error)})}
+ async put(store,value,key="data"){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).put({key,value});r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
+ async clear(store){const db=await this.open();return new Promise((resolve,reject)=>{const r=db.transaction(store,"readwrite").objectStore(store).clear();r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
+}
